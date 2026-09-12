@@ -4,45 +4,1204 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>행복은 어디에든 있어</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root { color-scheme: light; --ink: #183529; --green: #245d45; --surface: #ffffff; }
-    * { box-sizing: border-box; }
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #f0f5ed; color: var(--ink); font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; padding: 24px; }
-    main { width: min(680px, 100%); background: var(--surface); border: 1px solid #d8e4d3; border-radius: 28px; padding: clamp(28px, 6vw, 60px); box-shadow: 0 18px 60px #21452c0d; }
-    .eyebrow { color: #5a7756; font-size: 13px; letter-spacing: 0.13em; font-weight: 700; margin: 0 0 20px; }
-    h1 { margin: 0; font-size: clamp(30px, 6vw, 42px); line-height: 1.3; letter-spacing: -0.05em; }
-    .intro { line-height: 1.8; color: #607064; margin: 18px 0 30px; }
-    .message { display: grid; place-items: center; text-align: center; min-height: 150px; padding: 24px; border-radius: 18px; background: #f2f6ee; font-size: clamp(20px, 3.5vw, 25px); font-weight: 700; line-height: 1.65; word-break: keep-all; }
-    button { display: block; width: 100%; margin-top: 24px; padding: 18px 20px; border: 0; border-radius: 14px; background: var(--green); color: #fff; font: 700 17px "Malgun Gothic", sans-serif; cursor: pointer; }
-    button:hover { background: #174632; }
-    button:focus-visible { outline: 3px solid #c17a12; outline-offset: 5px; }
-    footer { margin-top: 26px; color: #778273; font-size: 12px; line-height: 1.7; text-align: center; }
+    :root {
+      --bg: #e9f2ee;
+      --machine-top: #65a7bc;
+      --machine-top-shadow: #478498;
+      --machine-body: #f7f6f0;
+      --machine-line: #2d3748;
+      --glass-bg: #cdeee8;
+      --glass-glow: rgba(255, 255, 255, 0.45);
+      --accent-coral: #ff6b6b;
+      --accent-coral-dark: #e04a4a;
+      --accent-yellow: #ffd166;
+      --accent-green: #06d6a0;
+      --ctrl-panel: #202b38;
+      --ink: #202b38;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 30%, #f6faf8 0%, #e1ebe6 100%);
+      color: var(--ink);
+      font-family: 'Noto Sans KR', sans-serif;
+      padding: 16px;
+      overflow-x: hidden;
+    }
+
+    /* 상단 헤더 */
+    header {
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ffffff;
+      color: #3b7a66;
+      border: 2px solid #b2d5c9;
+      border-radius: 999px;
+      padding: 4px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+    h1 {
+      font-family: 'Jua', cursive, sans-serif;
+      font-size: clamp(28px, 5vw, 38px);
+      color: #214436;
+      letter-spacing: 0.02em;
+      text-shadow: 2px 2px 0 #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .subtitle {
+      font-size: 14px;
+      color: #587569;
+      margin-top: 4px;
+    }
+
+    /* 사운드 토글 */
+    .sound-toggle {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      background: #ffffff;
+      border: 2px solid #333;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 20px;
+      box-shadow: 3px 3px 0 #333;
+      transition: transform 0.1s, box-shadow 0.1s;
+      z-index: 100;
+    }
+    .sound-toggle:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 #333;
+    }
+
+    /* 인형뽑기 기계 메인 프레임 */
+    .machine-wrapper {
+      position: relative;
+      width: min(400px, 92vw);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .machine {
+      position: relative;
+      width: 100%;
+      background: var(--machine-body);
+      border: 4px solid var(--machine-line);
+      border-radius: 36px 36px 24px 24px;
+      box-shadow: 0 16px 32px rgba(32, 43, 56, 0.14), inset 0 -8px 0 rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+
+    /* 상단 지붕 캡 */
+    .machine-roof {
+      height: 48px;
+      background: var(--machine-top);
+      border-bottom: 4px solid var(--machine-line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: inset 0 -6px 0 var(--machine-top-shadow);
+    }
+    .roof-accent {
+      position: absolute;
+      left: 20px;
+      top: 10px;
+      width: 38px;
+      height: 7px;
+      background: rgba(255, 255, 255, 0.45);
+      border-radius: 6px;
+    }
+    .machine-sign {
+      font-family: 'Jua', cursive, sans-serif;
+      font-size: 17px;
+      color: #ffffff;
+      letter-spacing: 0.08em;
+      text-shadow: 1px 2px 0 rgba(0,0,0,0.25);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* 유리 쇼케이스 영역 */
+    .glass-chamber {
+      position: relative;
+      height: 330px;
+      background: var(--glass-bg);
+      border: 4px solid var(--machine-line);
+      border-left: none;
+      border-right: none;
+      overflow: hidden;
+      box-shadow: inset 0 0 40px rgba(71, 132, 152, 0.2);
+    }
+
+    /* 유리창 반사광 */
+    .glass-reflection {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      z-index: 25;
+      background: linear-gradient(125deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 22%, transparent 23%, transparent 45%, rgba(255,255,255,0.18) 46%, transparent 58%);
+    }
+
+    /* 내부 배출구 구멍 (좌측 하단) */
+    .chute-hole {
+      position: absolute;
+      left: 14px;
+      bottom: 0;
+      width: 68px;
+      height: 28px;
+      background: #18222d;
+      border: 3px solid var(--machine-line);
+      border-bottom: none;
+      border-radius: 12px 12px 0 0;
+      z-index: 5;
+    }
+    .chute-hole::after {
+      content: 'DROP';
+      position: absolute;
+      bottom: 3px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      font-weight: 900;
+      color: #648197;
+      letter-spacing: 0.1em;
+    }
+
+    /* 크레인 레일 및 캐리지 시스템 */
+    .crane-rail {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 12px;
+      background: #475a6c;
+      border-bottom: 2px solid var(--machine-line);
+      z-index: 10;
+    }
+
+    .crane-assembly {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 20;
+      transition: left 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* 크레인 트롤리 베이스 */
+    .trolley {
+      width: 44px;
+      height: 14px;
+      background: #ea726e;
+      border: 3px solid var(--machine-line);
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      box-shadow: inset 0 -3px 0 rgba(0,0,0,0.2);
+    }
+
+    /* 와이어 줄 */
+    .wire-container {
+      width: 4px;
+      height: 38px;
+      background: #2d3748;
+      position: relative;
+      transition: height 1s ease-in-out;
+    }
+
+    /* 집게 헤드 및 갈고리들 */
+    .claw-head {
+      position: relative;
+      width: 32px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .claw-ring {
+      width: 22px;
+      height: 22px;
+      background: #ff7575;
+      border: 3px solid var(--machine-line);
+      border-radius: 50%;
+      position: relative;
+      z-index: 2;
+    }
+    .claw-ring::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 8px;
+      background: #2d3748;
+      border-radius: 50%;
+    }
+
+    /* 집게발들 (좌/우) */
+    .claw-finger {
+      position: absolute;
+      top: 14px;
+      width: 14px;
+      height: 48px;
+      border: 3px solid var(--machine-line);
+      background: #e2e8f0;
+      z-index: 1;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .claw-finger.left {
+      left: -2px;
+      border-radius: 12px 0 0 24px;
+      border-right: none;
+      transform-origin: top right;
+      transform: rotate(18deg);
+    }
+    .claw-finger.right {
+      right: -2px;
+      border-radius: 0 12px 24px 0;
+      border-left: none;
+      transform-origin: top left;
+      transform: rotate(-18deg);
+    }
+
+    /* 집게가 활짝 벌어질 때 */
+    .claw-open .claw-finger.left {
+      transform: rotate(-22deg);
+    }
+    .claw-open .claw-finger.right {
+      transform: rotate(22deg);
+    }
+
+    /* 집게가 꽉 쥐었을 때 */
+    .claw-grab .claw-finger.left {
+      transform: rotate(36deg);
+    }
+    .claw-grab .claw-finger.right {
+      transform: rotate(-36deg);
+    }
+
+    /* 집게에 매달린 인형 */
+    .held-toy {
+      position: absolute;
+      top: 36px;
+      left: 50%;
+      transform: translateX(-50%) scale(0.88);
+      z-index: 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .held-toy.visible {
+      opacity: 1;
+    }
+
+    /* 인형들이 쌓여있는 바닥 영역 */
+    .pit-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 140px;
+      pointer-events: none;
+      z-index: 8;
+    }
+    .pit-toys {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* 인형 개별 컴포넌트 */
+    .toy {
+      position: absolute;
+      width: 62px;
+      height: 62px;
+      filter: drop-shadow(1px 3px 2px rgba(0,0,0,0.12));
+      transition: transform 0.3s;
+    }
+
+    /* 하단 조작 패널 */
+    .control-panel {
+      background: var(--machine-body);
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .panel-board {
+      width: 100%;
+      background: var(--ctrl-panel);
+      border: 3px solid var(--machine-line);
+      border-radius: 18px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: inset 0 4px 8px rgba(0,0,0,0.4), 0 3px 0 #ffffff;
+    }
+
+    /* 조이스틱 */
+    .joystick-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+    }
+    .joystick-base {
+      width: 34px;
+      height: 16px;
+      background: #11171f;
+      border: 2px solid #57697b;
+      border-radius: 50%;
+      position: relative;
+      display: flex;
+      justify-content: center;
+    }
+    .joystick-stick {
+      position: absolute;
+      bottom: 6px;
+      width: 6px;
+      height: 28px;
+      background: #cbd5e1;
+      border: 2px solid var(--machine-line);
+      border-radius: 3px;
+      transform-origin: bottom center;
+      transition: transform 0.2s;
+    }
+    .joystick-knob {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 22px;
+      height: 22px;
+      background: var(--accent-coral);
+      border: 3px solid var(--machine-line);
+      border-radius: 50%;
+      box-shadow: inset 2px 2px 0 rgba(255,255,255,0.4);
+    }
+    .joystick-active .joystick-stick {
+      transform: rotate(24deg);
+    }
+
+    /* 상태 전광판 */
+    .display-screen {
+      background: #11171f;
+      border: 2px solid #3c4c5e;
+      border-radius: 10px;
+      padding: 6px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .screen-led {
+      font-family: 'Jua', cursive, sans-serif;
+      font-size: 14px;
+      color: #64ffda;
+      letter-spacing: 0.05em;
+      text-shadow: 0 0 6px #64ffda;
+      text-align: center;
+    }
+
+    /* 기계 본체 빨간 버튼 */
+    .machine-btn-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .machine-btn {
+      width: 38px;
+      height: 38px;
+      background: var(--accent-coral);
+      border: 3px solid var(--machine-line);
+      border-radius: 50%;
+      box-shadow: 0 5px 0 var(--accent-coral-dark), 0 6px 4px rgba(0,0,0,0.3);
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+    .machine-btn:active, .machine-btn.pressed {
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 var(--accent-coral-dark), 0 2px 2px rgba(0,0,0,0.3);
+    }
+
+    /* 하단 배출구와 동전구 */
+    .lower-section {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+    }
+
+    .prize-exit {
+      position: relative;
+      width: 100px;
+      height: 58px;
+      background: #1e2833;
+      border: 3px solid var(--machine-line);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: inset 0 6px 10px rgba(0,0,0,0.6);
+      cursor: pointer;
+    }
+    .prize-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background: #2a3847;
+      border-bottom: 2px solid #57697b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: #94a3b8;
+      letter-spacing: 0.1em;
+      transition: transform 0.3s;
+      transform-origin: top center;
+    }
+    .prize-exit.open .prize-flap {
+      transform: rotateX(-50deg);
+    }
+    .exit-glow {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(255, 209, 102, 0.45) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .prize-exit.has-prize .exit-glow {
+      opacity: 1;
+      animation: pulseGlow 1s infinite alternate;
+    }
+    @keyframes pulseGlow {
+      from { opacity: 0.4; }
+      to { opacity: 0.9; }
+    }
+
+    /* 동전 슬롯 */
+    .coin-slot-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .coin-slot {
+      width: 32px;
+      height: 6px;
+      background: #2d3748;
+      border-radius: 4px;
+      border: 1px solid #718096;
+    }
+
+    /* 기계 다리 받침 */
+    .machine-feet {
+      width: 86%;
+      display: flex;
+      justify-content: space-between;
+      margin-top: -3px;
+    }
+    .foot {
+      width: 52px;
+      height: 14px;
+      background: #334155;
+      border: 3px solid var(--machine-line);
+      border-top: none;
+      border-radius: 0 0 10px 10px;
+    }
+
+    /* 하단 메인 뽑기 버튼 */
+    .main-draw-btn {
+      margin-top: 18px;
+      width: 100%;
+      max-width: 400px;
+      padding: 16px 24px;
+      background: linear-gradient(180deg, #ff7e79 0%, #ee5253 100%);
+      border: 3px solid var(--machine-line);
+      border-radius: 20px;
+      color: #ffffff;
+      font-family: 'Jua', cursive, sans-serif;
+      font-size: 22px;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      box-shadow: 0 6px 0 #b33939, 0 12px 20px rgba(238, 82, 83, 0.35);
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .main-draw-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 0 #b33939, 0 14px 24px rgba(238, 82, 83, 0.45);
+      background: linear-gradient(180deg, #ff8c87 0%, #f35d5e 100%);
+    }
+    .main-draw-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #b33939, 0 6px 12px rgba(238, 82, 83, 0.3);
+    }
+    .main-draw-btn:disabled {
+      background: #a0aec0;
+      border-color: #718096;
+      box-shadow: 0 4px 0 #4a5568;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* 결과 모달 (쪽지 오픈) */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(22, 34, 46, 0.65);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .modal-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: #ffffff;
+      border: 4px solid var(--machine-line);
+      border-radius: 32px;
+      width: min(440px, 94vw);
+      padding: clamp(24px, 5vw, 36px);
+      text-align: center;
+      box-shadow: 0 24px 48px rgba(0,0,0,0.25), 8px 8px 0 var(--accent-yellow);
+      transform: scale(0.8) translateY(20px);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+    .modal-backdrop.active .modal-card {
+      transform: scale(1) translateY(0);
+    }
+
+    .prize-character {
+      width: 110px;
+      height: 110px;
+      margin: -65px auto 14px;
+      background: #fffdf5;
+      border: 4px solid var(--machine-line);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+      animation: bounceToy 1.2s ease infinite alternate;
+    }
+    @keyframes bounceToy {
+      from { transform: translateY(0); }
+      to { transform: translateY(-8px); }
+    }
+
+    .letter-tag {
+      font-size: 13px;
+      font-weight: 800;
+      color: #ff6b6b;
+      letter-spacing: 0.12em;
+      margin-bottom: 8px;
+    }
+
+    .message-bubble {
+      background: #f4fbf8;
+      border: 3px dashed #73cbb0;
+      border-radius: 20px;
+      padding: 22px 18px;
+      margin: 14px 0 22px;
+      font-size: clamp(18px, 4vw, 22px);
+      font-weight: 700;
+      line-height: 1.6;
+      color: #1a4d3e;
+      word-break: keep-all;
+      position: relative;
+    }
+
+    .modal-btn {
+      width: 100%;
+      padding: 14px 20px;
+      background: #245d45;
+      border: 3px solid var(--machine-line);
+      border-radius: 16px;
+      color: #ffffff;
+      font-family: 'Jua', cursive, sans-serif;
+      font-size: 19px;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #133829;
+      transition: all 0.15s;
+    }
+    .modal-btn:hover {
+      background: #2f7a5b;
+      transform: translateY(-2px);
+      box-shadow: 0 7px 0 #133829;
+    }
+    .modal-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #133829;
+    }
+
+    /* 색종이 콘페티 파티클 */
+    .confetti-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      z-index: 1001;
+    }
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 14px;
+      border-radius: 2px;
+      opacity: 0.9;
+      animation: dropConfetti 2.4s ease-out forwards;
+    }
+    @keyframes dropConfetti {
+      0% {
+        transform: translateY(-50px) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    footer {
+      margin-top: 18px;
+      color: #688478;
+      font-size: 12px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
-  <main>
-    <p class="eyebrow">GROW TOGETHER · GITHUB PRACTICE</p>
+
+  <!-- 사운드 ON/OFF 버튼 -->
+  <button id="soundToggle" class="sound-toggle" type="button" title="소리 켜기/끄기" aria-label="효과음 토글">
+    🔊
+  </button>
+
+  <header>
+    <div class="badge">✦ LUCKY CLAW MACHINE ✦</div>
     <h1>행복은 어디에든 있어</h1>
-    <p class="intro">잠깐 쉬어 가도 괜찮아요.<br>버튼을 눌러 오늘의 응원 한 문장을 만나 보세요.</p>
-    <div id="message" class="message" role="status" aria-live="polite">당신의 다음 한 걸음을 응원합니다.</div>
-    <button id="draw" type="button">응원 뽑기</button>
-    <footer>연수용 실습 예제 · 입력한 개인정보 없이 이 브라우저에서만 작동합니다.</footer>
-  </main>
+    <p class="subtitle">오늘 나에게 도착할 따뜻한 응원 인형을 뽑아보세요!</p>
+  </header>
+
+  <!-- 인형뽑기 기계 컴포넌트 -->
+  <div class="machine-wrapper">
+    <div class="machine">
+
+      <!-- 상단 지붕 -->
+      <div class="machine-roof">
+        <div class="roof-accent"></div>
+        <div class="machine-sign">
+          <span>★</span> 행복 뽑기 머신 <span>★</span>
+        </div>
+      </div>
+
+      <!-- 투명 유리 쇼케이스 -->
+      <div class="glass-chamber" id="chamber">
+        <div class="glass-reflection"></div>
+
+        <!-- 좌측 배출구 구멍 -->
+        <div class="chute-hole"></div>
+
+        <!-- 상단 크레인 레일 -->
+        <div class="crane-rail"></div>
+
+        <!-- 크레인 어셈블리 (와이어 + 집게) -->
+        <div class="crane-assembly" id="crane">
+          <div class="trolley"></div>
+          <div class="wire-container" id="wire"></div>
+          <div class="claw-head" id="clawHead">
+            <div class="claw-ring"></div>
+            <div class="claw-finger left"></div>
+            <div class="claw-finger right"></div>
+
+            <!-- 집게에 잡힌 인형 (애니메이션 중 노출) -->
+            <div class="held-toy" id="heldToy"></div>
+          </div>
+        </div>
+
+        <!-- 바닥에 쌓여있는 인형들 -->
+        <div class="pit-container">
+          <div class="pit-toys" id="pitToys">
+            <!-- 자바스크립트로 다양한 동물 인형들 배치 -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 하단 조작 컨트롤 패널 -->
+      <div class="control-panel">
+        <div class="panel-board">
+
+          <!-- 조이스틱 -->
+          <div class="joystick-group" id="joystick">
+            <div class="joystick-base">
+              <div class="joystick-stick">
+                <div class="joystick-knob"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 전광판 화면 -->
+          <div class="display-screen">
+            <div class="screen-led" id="screenLed">READY!</div>
+          </div>
+
+          <!-- 빨간 아케이드 버튼 -->
+          <div class="machine-btn-group">
+            <button class="machine-btn" id="machineBtn" type="button" title="뽑기 버튼"></button>
+          </div>
+
+        </div>
+
+        <!-- 하단 배출구 및 동전구 -->
+        <div class="lower-section">
+          <div class="prize-exit" id="prizeExit" title="인형 나오는 곳">
+            <div class="exit-glow"></div>
+            <div class="prize-flap">PUSH</div>
+          </div>
+
+          <div class="coin-slot-wrapper">
+            <div class="coin-slot"></div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- 기계 다리 -->
+    <div class="machine-feet">
+      <div class="foot"></div>
+      <div class="foot"></div>
+    </div>
+
+    <!-- 메인 응원 뽑기 버튼 -->
+    <button class="main-draw-btn" id="drawBtn" type="button">
+      <span>🎁</span> 응원 인형 뽑기!
+    </button>
+  </div>
+
+  <!-- 결과 쪽지 모달 -->
+  <div class="modal-backdrop" id="resultModal" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="prize-character" id="modalToy">
+        <!-- 뽑힌 인형 SVG -->
+      </div>
+      <div class="letter-tag">TODAY'S MESSAGE</div>
+      <div class="message-bubble" id="modalMessage">
+        <!-- 응원 문구 -->
+      </div>
+      <button class="modal-btn" id="closeModalBtn" type="button">
+        한 번 더 뽑기 💫
+      </button>
+    </div>
+  </div>
+
+  <!-- 색종이 이펙트 레이어 -->
+  <div class="confetti-layer" id="confettiLayer"></div>
+
+  <footer>연수용 실습 예제 · 입력한 개인정보 없이 이 브라우저에서만 작동합니다.</footer>
+
   <script>
-    const messages = [
-      "작은 시도도 분명한 한 걸음입니다.",
-      "처음이라 서툰 것은 자연스러운 일이에요.",
-      "오늘 배운 한 가지가 내일의 힘이 됩니다.",
-      "다시 시작할 수 있는 용기를 응원합니다.",
-      "혼자 고민할 때는 함께 물어봐도 괜찮아요.",
-      "천천히 가도, 지금 나아가고 있어요."
+    /* ========================================================
+       1. 인형 데이터 및 SVG 생성기
+       ======================================================== */
+    const TOY_TYPES = [
+      { id: 'pink-bunny', name: '행복한 분홍 토끼', color: '#ff9ebb', earColor: '#ffaec9', type: 'bunny' },
+      { id: 'white-bunny', name: '순수한 눈토끼', color: '#ffffff', earColor: '#ffd1df', type: 'bunny' },
+      { id: 'green-bear', name: '행운의 네잎 곰돌이', color: '#7ad957', earColor: '#a1e887', type: 'bear' },
+      { id: 'brown-bear', name: '포근한 밤티 곰돌이', color: '#fca34d', earColor: '#fdbd7c', type: 'bear' },
+      { id: 'blue-bear', name: '맑은 하늘 곰돌이', color: '#688fa9', earColor: '#95b3cb', type: 'bear' },
+      { id: 'coral-bear', name: '사랑스러운 코랄 곰돌이', color: '#ff7675', earColor: '#ff9a99', type: 'bear' }
     ];
-    let previous = -1;
-    document.querySelector("#draw").addEventListener("click", () => {
-      let next = Math.floor(Math.random() * messages.length);
-      if (next === previous) next = (next + 1) % messages.length;
-      previous = next;
-      document.querySelector("#message").textContent = messages[next];
+
+    function createToySVG(toy, size = 60) {
+      if (toy.type === 'bunny') {
+        return `
+          <svg viewBox="0 0 100 100" width="${size}" height="${size}">
+            <!-- 귀 -->
+            <ellipse cx="32" cy="24" rx="10" ry="24" fill="${toy.color}" stroke="#2d3748" stroke-width="4.5" transform="rotate(-12 32 24)"/>
+            <ellipse cx="32" cy="24" rx="5" ry="16" fill="${toy.earColor}" transform="rotate(-12 32 24)"/>
+            <ellipse cx="68" cy="24" rx="10" ry="24" fill="${toy.color}" stroke="#2d3748" stroke-width="4.5" transform="rotate(12 68 24)"/>
+            <ellipse cx="68" cy="24" rx="5" ry="16" fill="${toy.earColor}" transform="rotate(12 68 24)"/>
+            <!-- 얼굴 -->
+            <circle cx="50" cy="62" r="34" fill="${toy.color}" stroke="#2d3748" stroke-width="4.5"/>
+            <!-- 볼터치 -->
+            <ellipse cx="30" cy="68" rx="6" ry="3.5" fill="#ff7675" opacity="0.6"/>
+            <ellipse cx="70" cy="68" rx="6" ry="3.5" fill="#ff7675" opacity="0.6"/>
+            <!-- 눈 -->
+            <circle cx="38" cy="58" r="4" fill="#2d3748"/>
+            <circle cx="62" cy="58" r="4" fill="#2d3748"/>
+            <circle cx="39" cy="57" r="1.5" fill="#ffffff"/>
+            <circle cx="63" cy="57" r="1.5" fill="#ffffff"/>
+            <!-- 입 (x) -->
+            <path d="M46 66 L54 74 M54 66 L46 74" stroke="#2d3748" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        `;
+      } else {
+        return `
+          <svg viewBox="0 0 100 100" width="${size}" height="${size}">
+            <!-- 귀 -->
+            <circle cx="25" cy="28" r="15" fill="${toy.color}" stroke="#2d3748" stroke-width="4.5"/>
+            <circle cx="25" cy="28" r="8" fill="${toy.earColor}"/>
+            <circle cx="75" cy="28" r="15" fill="${toy.color}" stroke="#2d3748" stroke-width="4.5"/>
+            <circle cx="75" cy="28" r="8" fill="${toy.earColor}"/>
+            <!-- 얼굴 -->
+            <circle cx="50" cy="58" r="34" fill="${toy.color}" stroke="#2d3748" stroke-width="4.5"/>
+            <!-- 주둥이 -->
+            <ellipse cx="50" cy="66" rx="14" ry="10" fill="#ffffff" stroke="#2d3748" stroke-width="3.5"/>
+            <!-- 코와 입 -->
+            <ellipse cx="50" cy="63" rx="4.5" ry="3" fill="#2d3748"/>
+            <path d="M50 66 L50 71 M46 71 Q50 75 54 71" fill="none" stroke="#2d3748" stroke-width="2.8" stroke-linecap="round"/>
+            <!-- 볼터치 -->
+            <ellipse cx="28" cy="62" rx="5" ry="3" fill="#ff7675" opacity="0.6"/>
+            <ellipse cx="72" cy="62" rx="5" ry="3" fill="#ff7675" opacity="0.6"/>
+            <!-- 눈 -->
+            <circle cx="36" cy="52" r="3.5" fill="#2d3748"/>
+            <circle cx="64" cy="52" r="3.5" fill="#2d3748"/>
+          </svg>
+        `;
+      }
+    }
+
+    /* 바닥에 인형들 채우기 */
+    const pitToysContainer = document.getElementById('pitToys');
+    const pitLayout = [
+      { toyIdx: 0, x: 20, y: 15, rotate: -8 },
+      { toyIdx: 1, x: 70, y: 35, rotate: 12 },
+      { toyIdx: 2, x: 120, y: 10, rotate: -15 },
+      { toyIdx: 3, x: 175, y: 28, rotate: 5 },
+      { toyIdx: 4, x: 230, y: 12, rotate: -6 },
+      { toyIdx: 5, x: 280, y: 32, rotate: 14 },
+      { toyIdx: 1, x: 45, y: 65, rotate: 18 },
+      { toyIdx: 3, x: 100, y: 70, rotate: -10 },
+      { toyIdx: 0, x: 155, y: 68, rotate: 8 },
+      { toyIdx: 2, x: 210, y: 65, rotate: -14 },
+      { toyIdx: 4, x: 260, y: 72, rotate: 6 }
+    ];
+
+    pitLayout.forEach(item => {
+      const el = document.createElement('div');
+      el.className = 'toy';
+      el.style.left = `${item.x}px`;
+      el.style.bottom = `${item.y}px`;
+      el.style.transform = `rotate(${item.rotate}deg)`;
+      el.innerHTML = createToySVG(TOY_TYPES[item.toyIdx], 66);
+      pitToysContainer.appendChild(el);
+    });
+
+    /* ========================================================
+       2. 응원 메시지 목록
+       ======================================================== */
+    const messages = [
+      "행복은 멀리 있지 않아요. 지금 당신 곁에 머물고 있습니다 🍀",
+      "작은 시도도 분명한 한 걸음입니다. 오늘도 정말 잘하셨어요!",
+      "처음이라 서툰 것은 자연스러운 일이에요. 당신의 속도로 가도 괜찮습니다.",
+      "오늘 배운 한 가지가 내일의 든든한 힘이 됩니다 🌱",
+      "다시 시작할 수 있는 당신의 용기를 온 마음으로 응원합니다 ✦",
+      "혼자 고민할 때는 함께 물어봐도 괜찮아요. 언제나 곁에 있을게요.",
+      "천천히 가도 괜찮아요, 지금 아주 멋지게 나아가고 있어요 ✨",
+      "오늘 하루도 수고 많았어요. 따뜻한 차 한 잔처럼 편안한 쉼이 되길!",
+      "당신이라는 존재 자체로 누군가에게는 이미 커다란 빛입니다 💖",
+      "마음속에 품은 반짝이는 꿈들이 차근차근 피어날 거예요 🌸",
+      "어떤 순간에도 당신의 편이 되어 줄게요. 힘내요, 우리 반 화이팅!",
+      "작은 기쁨들이 모여 가장 눈부신 오늘을 만듭니다 🌈"
+    ];
+
+    /* ========================================================
+       3. Web Audio API (외부 파일 없는 아케이드 8-bit 신디사이저)
+       ======================================================== */
+    let audioCtx = null;
+    let isSoundMuted = false;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playSound(type) {
+      if (isSoundMuted) return;
+      initAudio();
+      if (!audioCtx) return;
+
+      const now = audioCtx.currentTime;
+
+      if (type === 'coin') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(987.77, now); // B5
+        osc.frequency.setValueAtTime(1318.51, now + 0.08); // E6
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+        osc.start(now);
+        osc.stop(now + 0.35);
+      } else if (type === 'motor') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(120, now);
+        osc.frequency.linearRampToValueAtTime(160, now + 0.4);
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.linearRampToValueAtTime(0.001, now + 0.4);
+        osc.start(now);
+        osc.stop(now + 0.4);
+      } else if (type === 'grab') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.15);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+        osc.start(now);
+        osc.stop(now + 0.25);
+      } else if (type === 'fanfare') {
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // C, E, G, C(high)
+        notes.forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+          gain.gain.setValueAtTime(0.16, now + idx * 0.12);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.35);
+          osc.start(now + idx * 0.12);
+          osc.stop(now + idx * 0.12 + 0.35);
+        });
+      }
+    }
+
+    // 사운드 토글
+    const soundToggle = document.getElementById('soundToggle');
+    soundToggle.addEventListener('click', () => {
+      isSoundMuted = !isSoundMuted;
+      soundToggle.textContent = isSoundMuted ? '🔇' : '🔊';
+      if (!isSoundMuted) initAudio();
+    });
+
+    /* ========================================================
+       4. 인형뽑기 애니메이션 & 시퀀스 로직
+       ======================================================== */
+    const crane = document.getElementById('crane');
+    const wire = document.getElementById('wire');
+    const clawHead = document.getElementById('clawHead');
+    const heldToy = document.getElementById('heldToy');
+    const screenLed = document.getElementById('screenLed');
+    const drawBtn = document.getElementById('drawBtn');
+    const machineBtn = document.getElementById('machineBtn');
+    const joystick = document.getElementById('joystick');
+    const prizeExit = document.getElementById('prizeExit');
+    const resultModal = document.getElementById('resultModal');
+    const modalToy = document.getElementById('modalToy');
+    const modalMessage = document.getElementById('modalMessage');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const confettiLayer = document.getElementById('confettiLayer');
+
+    let isPlaying = false;
+    let lastMessageIdx = -1;
+
+    function launchConfetti() {
+      confettiLayer.innerHTML = '';
+      const colors = ['#ff6b6b', '#ffd166', '#06d6a0', '#118ab2', '#ff9ebb', '#a78bfa'];
+      for (let i = 0; i < 40; i++) {
+        const conf = document.createElement('div');
+        conf.className = 'confetti';
+        conf.style.left = `${Math.random() * 100}vw`;
+        conf.style.top = `${Math.random() * 20}vh`;
+        conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        conf.style.animationDelay = `${Math.random() * 0.4}s`;
+        conf.style.animationDuration = `${1.8 + Math.random() * 1}s`;
+        confettiLayer.appendChild(conf);
+      }
+    }
+
+    async function startDraw() {
+      if (isPlaying) return;
+      isPlaying = true;
+      drawBtn.disabled = true;
+      machineBtn.classList.add('pressed');
+      joystick.classList.add('joystick-active');
+
+      // 동전 투입 소리
+      playSound('coin');
+      screenLed.textContent = 'START!';
+
+      // 랜덤 인형 및 메시지 선택
+      const pickedToy = TOY_TYPES[Math.floor(Math.random() * TOY_TYPES.length)];
+      let msgIdx = Math.floor(Math.random() * messages.length);
+      if (msgIdx === lastMessageIdx) msgIdx = (msgIdx + 1) % messages.length;
+      lastMessageIdx = msgIdx;
+      const pickedMessage = messages[msgIdx];
+
+      heldToy.innerHTML = createToySVG(pickedToy, 52);
+
+      await sleep(350);
+      machineBtn.classList.remove('pressed');
+      joystick.classList.remove('joystick-active');
+
+      // 1. 크레인을 랜덤한 가로 위치로 이동
+      const targetPercent = 35 + Math.random() * 40; // 35% ~ 75%
+      crane.style.left = `${targetPercent}%`;
+      screenLed.textContent = 'AIMING..';
+      playSound('motor');
+
+      await sleep(900);
+
+      // 2. 집게를 활짝 벌림
+      clawHead.className = 'claw-head claw-open';
+      await sleep(250);
+
+      // 3. 와이어가 풀리며 아래로 하강
+      screenLed.textContent = 'DOWN!';
+      wire.style.height = '185px';
+      playSound('motor');
+
+      await sleep(1050);
+
+      // 4. 인형을 잡음 (집게 닫힘 & 인형 부착)
+      clawHead.className = 'claw-head claw-grab';
+      heldToy.classList.add('visible');
+      playSound('grab');
+      screenLed.textContent = 'CATCH!';
+
+      await sleep(650);
+
+      // 5. 인형을 잡고 위로 상승
+      screenLed.textContent = 'UP!';
+      wire.style.height = '38px';
+      playSound('motor');
+
+      await sleep(1100);
+
+      // 6. 배출구(왼쪽 16%) 쪽으로 이동
+      screenLed.textContent = 'MOVING..';
+      crane.style.left = '16%';
+      playSound('motor');
+
+      await sleep(1000);
+
+      // 7. 집게가 열리며 인형이 배출구로 쏙 낙하
+      clawHead.className = 'claw-head claw-open';
+      heldToy.classList.remove('visible');
+      screenLed.textContent = 'LUCKY!';
+
+      await sleep(350);
+      clawHead.className = 'claw-head';
+      prizeExit.classList.add('has-prize', 'open');
+
+      // 8. 팡파르 및 결과 모달 오픈
+      await sleep(500);
+      playSound('fanfare');
+      launchConfetti();
+
+      modalToy.innerHTML = createToySVG(pickedToy, 80);
+      modalMessage.textContent = pickedMessage;
+      resultModal.classList.add('active');
+
+      prizeExit.classList.remove('open');
+    }
+
+    function resetMachine() {
+      resultModal.classList.remove('active');
+      prizeExit.classList.remove('has-prize');
+      screenLed.textContent = 'READY!';
+      crane.style.left = '50%';
+      drawBtn.disabled = false;
+      isPlaying = false;
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // 이벤트 리스너 등록
+    drawBtn.addEventListener('click', startDraw);
+    machineBtn.addEventListener('click', startDraw);
+    joystick.addEventListener('click', startDraw);
+    closeModalBtn.addEventListener('click', resetMachine);
+
+    // ESC 키로 모달 닫기
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && resultModal.classList.contains('active')) {
+        resetMachine();
+      }
     });
   </script>
 </body>
